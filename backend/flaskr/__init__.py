@@ -205,6 +205,7 @@ def create_app(test_config=None):
                 'total_questions': len(current_questions),
                 'current_category': category_id
             })
+
         except:
             abort(404)
 
@@ -227,25 +228,23 @@ def create_app(test_config=None):
             body = request.get_json()
 
             if not ('quiz_category' in body and 'previous_questions' in body):
-                abort(422)
+                abort(400)
 
             category = body.get('quiz_category')
             previous_questions = body.get('previous_questions')
 
             if category['type'] == 'click':
-                available_questions = Question.query.filter(
-                    Question.id.notin_((previous_questions))).all()
+                available_questions = Question.query.filter(Question.id.notin_((previous_questions))).all()
             else:
-                available_questions = Question.query.filter_by(
-                    category=category['id']).filter(Question.id.notin_((previous_questions))).all()
+                available_questions = Question.query.filter_by(category=category['id']).filter(Question.id.notin_((previous_questions))).all()
 
-            new_question = available_questions[random.randrange(
-                0, len(available_questions))].format() if len(available_questions) > 0 else None
+            new_question = available_questions[random.randrange(0, len(available_questions))].format() if len(available_questions) > 0 else None
 
             return jsonify({
                 'success': True,
                 'question': new_question
             })
+
         except:
             abort(422)
 
