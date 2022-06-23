@@ -23,6 +23,8 @@ class TriviaTestCase(unittest.TestCase):
         setup_db(self.app, self.database_path)
         self.new_question = {"question":"does this work?","answer":"i dont know","category":"4","difficulty":2}
         self.search = {"searchTerm": "title"}
+        self.new_quiz_wrong = {'question': []}
+        self.new_quiz = {'question': [],'category': {'type': 'click', 'id': 5}}
         # binds the app to the current context
         # with self.app.app_context():
         #     self.db = SQLAlchemy()
@@ -147,17 +149,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], "resource not found")
 
     def test_play_quiz(self):
-        new_quiz_round = {'previous_questions': [],'quiz_category': {'type': 'click', 'id': 5}}
-
-        res = self.client().post('/quizzes', json=new_quiz_round)
+        res = self.client().post('/quizzes', json=self.new_quiz)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-    def test_404_play_quiz(self):
-        new_quiz_round = {'previous_questions': []}
-        res = self.client().post('/quizzes', json=new_quiz_round)
+    def test_play_quiz_error(self):
+        res = self.client().post('/quizzes', json=self.new_quiz_wrong)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
