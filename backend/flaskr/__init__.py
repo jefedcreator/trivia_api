@@ -7,6 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
 
+from sqlalchemy import func
+
 from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
@@ -221,34 +223,29 @@ def create_app(test_config=None):
     and shown whether they were correct or not.
     """
     @app.route('/quizzes', methods=['POST'])
-    def play_quiz():
+    def play_quizzes():
         try:
             body = request.get_json()
+            category = body.get('quiz_category')
+            question = body.get('previous_questions')
 
-            if 'category' not in body:
-                abort(400)
-
-            if 'question' not in body:
-                abort(400)
-
-            category = body.get('category', None)
-            question = body.get('question', None)
-
-            if category['type'] == 'click':
+            if category['type'] == 'play':
                 possible_questions = Question.query.filter(Question.id.notin_((question))).all()
             else:
                 possible_questions = Question.query.filter_by(category=category['id']).filter(Question.id.notin_((question))).all()
 
-            next_question = possible_questions[random.randrange(0, len(possible_questions))].format() if len(possible_questions) > 0 else None
+            if len(possible_questions) > 0:
+                new_question = random.choice(possible_questions)
+                    
+            else: None
 
             return jsonify({
                 'success': True,
-                'question': next_question
+                'question': new_question.format(),
+                'category': category['type']
             })
-
         except:
             abort(422)
-
     """
     @TODO:
     Create error handlers for all expected errors
