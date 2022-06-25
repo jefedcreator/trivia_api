@@ -229,10 +229,10 @@ def create_app(test_config=None):
             category = body.get('quiz_category')
             question = body.get('previous_questions')
 
-            if category['type'] == 'play':
+            if category.get('type') == 'play':
                 possible_questions = Question.query.filter(Question.id.notin_((question))).all()
             else:
-                possible_questions = Question.query.filter_by(category=category['id']).filter(Question.id.notin_((question))).all()
+                possible_questions = Question.query.filter_by(category=category.get('id')).filter(Question.id.notin_((question))).all()
 
             if len(possible_questions) > 0:
                 new_question = random.choice(possible_questions)
