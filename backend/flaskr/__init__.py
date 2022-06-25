@@ -238,7 +238,9 @@ def create_app(test_config=None):
             if len(possible_questions) > 0:
                 new_question = random.choice(possible_questions)
                     
-            else: None
+            else: 
+                None
+                abort(404)
 
             return jsonify({
                 'success': True,
