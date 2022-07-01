@@ -72,17 +72,17 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'], "resource not found") 
 
-    def test_del_question(self):
-        res = self.client().delete("/questions/23")
-        data = json.loads(res.data)
+    # def test_del_question(self):
+    #     res = self.client().delete("/questions/23")
+    #     data = json.loads(res.data)
         
-        question = Question.query.get(23)
+    #     question = Question.query.get(23)
     
-        self.assertEqual(res.status_code,200)
-        self.assertEqual(data['success'],True)
+    #     self.assertEqual(res.status_code,200)
+    #     self.assertEqual(data['success'],True)
         
-        self.assertEqual(data['deleted'],23)
-        self.assertEqual(question,None)    
+    #     self.assertEqual(data['deleted'],23)
+    #     self.assertEqual(question,None)    
 
     def test_del_question_does_not_exist(self):
         res = self.client().delete("/questions/100")
@@ -94,14 +94,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'],False)
         self.assertEqual(data['message'],"resource not found")  
 
-    def test_create_new_question(self):
-        res = self.client().post('/question', json=self.new_question)
-        data = json.loads(res.data)
+    # def test_create_new_question(self):
+    #     res = self.client().post('/question', json=self.new_question)
+    #     data = json.loads(res.data)
 
-        # print(data)
-        self.assertEqual(res.status_code,200)
-        self.assertEqual(data['success'], True)
-        self.assertTrue(data['total_questions'])
+    #     # print(data)
+    #     self.assertEqual(res.status_code,200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertTrue(data['total_questions'])
 
     def test_create_new_question_error(self):
         res = self.client().post('/question/100', json=self.new_question)
